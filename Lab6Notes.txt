@@ -1,0 +1,56 @@
+Bits and bytes of HTTP
+    HTTP is encoded in ASCII
+        []Headers
+        []Chunking control messages
+        []Everything!
+    ...Except payload:
+        []HTTP allows arbitrary byte data in payload
+        []Could be text (ASCII,UTF-8,UTF-16,Latin-1)
+        []Could be images (binary encoding)
+        []Could be anything!(.exe,.jar,.wav,.mpg,...)
+
+
+Talk about HTTP stuff
+May use textbook for this stuff
+When we send an HTTP message, send plain text
+    However, there is a thing before the header, known as the request line (necessary, of course)
+
+HTTP Request
+    Request line [METHOD][sp][URL][sp][VERSION][cr][lf]
+        POST_/cgi/upload.php_HTTP/1.1
+        only part of url, hosted on a server by itself
+        (things have changed, may have a server hosting many webpages)
+        POST or GET
+        POST? PUT?
+        Next line (actual)
+    Header lines [FIELD NAME][:][sp][VALUE][cr][lf]
+                 [NAME][:][sp][VALUE][cr][lf]
+                 (many lines later)
+                 [NAME][:][sp][VALUE][cr[lf]
+                 [cr][lf]
+        EXAMPLE: Host: example.com
+                 content-length: 12
+                 <-blankline
+                 Hello world!
+
+HTTP Response
+    Status line  [VERSION][sp][STATUS CODE][sp][STATUS PHRASE][cr][lf]
+        HTTP/1.1_200_OK
+        content-length: 9
+    Header lines [NAME][:][sp][VALUE][cr][lf]
+                 (many lines later)
+                 [NAME][:][sp][VALUE[cr][lf]
+                 [cr][lf]
+        EXAMPLE: HTTP/1.1_200_OK
+                 content-length: 7
+                 <-blankline
+                 Welcome
+
+Transfer-Encoding: Chunked
+Chunked Body:
+    [CHUNK SIZE][cr][lf](CHUNK1)[cr][lf][CHUNK SIZE][cr][lf](CHUNK2)[cr][lf]['0'][cr][lf][cr][lf]
+    ['0'][cr][lf][cr][lf]=zero-sized chunk
+    ex: bytes(range(1,18))
+        ASCII           1  0  \r \n                                                 \r \n 1  \r \n    \r \n 0  \r \n \r \n
+        Bin(dec)                    1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16                17
+        Hex             31 30 0D 0A 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 0D 0A 31 0D 0A 11 0D 0A 30 0D 0A 0D 0A
