@@ -15,14 +15,15 @@ def main():
     Tests the client on a variety of resources
     """
 
-    # this resource request should result in "chunked" data transfer
+    # These resource request should result in "Content-Length" data transfer
     get_http_resource('http://seprof.sebern.com/', 'index.html')
-    # this resource request should result in "Content-Length" data transfer
     get_http_resource('http://seprof.sebern.com/sebern1.jpg', 'sebern1.jpg')
-    # get_http_resource('http://seprof.sebern.com:8080/sebern1.jpg', 'sebern2.jpg')
 
-    # another resource to try for a little larger and more complex entity
-    get_http_resource('http://seprof.sebern.com/courses/cs2910-2014-2015/sched.md', 'sched-file.md')
+    # this resource request should result in "chunked" data transfer
+    get_http_resource('http://seprof.sebern.com/courses/cs2910-2014-2015/sched.md','sched-file.md')
+
+    # Port 8080 no longer offered by seprof.sebern.com -- this resource will time out
+#    get_http_resource('http://seprof.sebern.com:8080/sebern1.jpg', 'sebern2.jpg') 
 
 
 def tcp_send(server_host, server_port,request):
