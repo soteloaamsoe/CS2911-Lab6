@@ -23,7 +23,7 @@ def main():
     get_http_resource('http://seprof.sebern.com/courses/cs2910-2014-2015/sched.md','sched-file.md')
 
     # Port 8080 no longer offered by seprof.sebern.com -- this resource will time out
-#    get_http_resource('http://seprof.sebern.com:8080/sebern1.jpg', 'sebern2.jpg') 
+#    get_http_resource('http://seprof.sebern.com:8080/sebern1.jpg', 'sebern2.jpg')
 
 
 def tcp_send(server_host, server_port,request):
@@ -61,6 +61,23 @@ def read_body():
     # loop through
     #
     return 0
+
+def next_byte(data_socket):
+    """
+    Read the next byte from the socket data_socket.
+    The data_socket argument should be an open tcp data connection
+    socket (either a client socket or a server data socket).
+    It should not be a tcp server's listening socket.
+
+    Read the next byte from the server.
+    If the byte is not yet available, this method blocks (waits)
+      until the byte becomes available.
+    If there are no more bytes, this method blocks indefinitely.
+
+    :param data_socket: The socket to read from
+    :return: the next byte, as a bytes object with a single byte in it
+    """
+    return data_socket.recv(1)
 
 def get_http_resource(url, file_name):
     """
@@ -106,8 +123,11 @@ def make_http_request(host, port, resource, file_name):
     tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_socket.connect((host, port))
     # create the actual http request
-    request = 'GET {path} HTTP 1.1\r\nHost: {host}\r\nConnection: Close\r\n\r\n'.format(path=resource, host=host)
+    request = 'GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: Close\r\n\r\n'.format(path=resource.decode('ASCII'), host=host.decode('ASCII'))
+    print(request)
     tcp_socket.send(request.encode())
+    resp = tcp_socket.recv(4096)
+    print(resp)
 
     #print(request)
     return 500  # Replace this "server error" with the actual status code
